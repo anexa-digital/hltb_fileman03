@@ -21,10 +21,16 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # Enable CORS for the frontend's origin (localhost:5173)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Frontend URL
+    allow_origins=[
+        "https://localhost:8000",
+        "https://localhost:3000",
+        "http://localhost:8000",
+        "http://localhost:3000",
+        "https://ws-ponal.heliteb.co",
+    ],
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all methods
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
