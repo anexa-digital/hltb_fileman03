@@ -80,3 +80,50 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+
+
+/* Container for the login form */
+.login-container {
+  background-color: #ffffff; /* White background for contrast */
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  margin: auto;
+}
+
+/* Login title */
+.login-container h1 {
+  color: #333; /* Dark color for "Login" to make it visible */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Input fields */
+.login-container input[type="text"],
+.login-container input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc; /* Light border for clarity */
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: #f9f9f9; /* Light background for inputs */
+  color: #333; /* Dark text for visibility */
+}
+
+/* Button */
+.login-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff; /* Blue button */
+  color: white; /* White text for contrast */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Button hover effect */
+.login-container button:hover {
+  background-color: #0056b3; /* Darker blue for hover */
+}

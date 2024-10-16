@@ -1,5 +1,6 @@
 // src/components/Login.jsx
 
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,7 +19,7 @@ const Login = () => {
 
   return (
     <div className="flex justify-center items-center h-screen ">
-      <div className="bg-white p-8 rounded-md shadow-md w-full max-w-sm">
+      <div className="bg-gray-50 p-8 rounded-md shadow-md w-full max-w-sm">
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1" htmlFor="username">Username</label>

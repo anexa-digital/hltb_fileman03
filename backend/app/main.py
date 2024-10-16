@@ -1,4 +1,7 @@
-from fastapi import FastAPI, File, UploadFile
+import uuid
+from datetime import datetime
+
+from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 import os
 
@@ -25,23 +28,34 @@ app.add_middleware(
 )
 
 
-# Endpoint to read file names from the UPLOAD_FOLDER
+# Endpoint to get list of files with ID, name, and modified date
 @app.get("/api/files")
-async def get_uploaded_files():
+async def get_files():
     try:
-        # List all files in the UPLOAD_FOLDER
-        files = os.listdir(UPLOAD_FOLDER)
-        
-        if not files:
-            return JSONResponse(content={"message": "No files found"}, status_code=200)
-
-        return JSONResponse(content={"files": files}, status_code=200)
-
+        files = []
+        for file_name in os.listdir(UPLOAD_FOLDER):
+            file_path = os.path.join(UPLOAD_FOLDER, file_name)
+            if os.path.isfile(file_path):
+                file_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, file_name))  # Generate consistent UUID based on file name
+                modified_time = datetime.fromtimestamp(os.path.getmtime(file_path))
+                files.append({
+                    "id": file_id,
+                    "name": file_name,
+                    "modified_time": modified_time.strftime('%Y-%m-%d %H:%M:%S')
+                })
+        return {"files": files}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
 
-
-
+# Endpoint to delete a file by name
+@app.delete("/api/files/{file_name}")
+async def delete_file(file_name: str):
+    file_path = os.path.join(UPLOAD_FOLDER, file_name)
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        return {"message": f"File '{file_name}' has been deleted successfully"}
+    else:
+        raise HTTPException(status_code=404, detail="File not found")
 
 # API Endpoint to handle file upload
 @app.post("/api/files")
