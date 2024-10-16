@@ -17,5 +17,6 @@ COPY . .
 EXPOSE 8000
 
 # Command to run the FastAPI app with Uvicorn and SSL
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--ssl-keyfile", "./desktop-ks0con1-key.pem", "--ssl-certfile", "./desktop-ks0con1-cert.pem"]
+#CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--ssl-keyfile", "./desktop-ks0con1-key.pem", "--ssl-certfile", "./desktop-ks0con1-cert.pem"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
