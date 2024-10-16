@@ -12,5 +12,16 @@ services:
       - ./uploads:/app/uploads  # Bind mount for the uploads folder
     #restart: always
 
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"  # Map port 3000 on the host to port 3000 in the container
+    #restart: always
+    env_file:
+      - ./frontend/.env
+    environment:
+      - NODE_ENV=production
+
 volumes:
   uploads:

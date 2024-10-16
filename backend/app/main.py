@@ -8,8 +8,8 @@ import os
 from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI(
-    title="Secure FileManager App",          # The name of your FastAPI app
-    description="Secure FileManager App",  # A short description of the app
+    title="Gestor de Archivos",          # The name of your FastAPI app
+    description="Gestor de Archivos",  # A short description of the app
     version="1.0.0"                  # The version of the app
 )
 
@@ -21,7 +21,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # Enable CORS for the frontend's origin (localhost:5173)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Frontend URL
+    allow_origins=["*"],  # Frontend URL
     allow_credentials=True,
     allow_methods=["*"],  # Allow all methods
     allow_headers=["*"],  # Allow all headers

@@ -87,7 +87,7 @@ const FilesGrid = () => {
                     onClick={() => removeFile(file.name)}
                     className="bg-red-600 text-white py-1 px-3 rounded-md hover:bg-red-700"
                   >
-                    Remove
+                    Remover
                   </button>
                 </td>
               </tr>
