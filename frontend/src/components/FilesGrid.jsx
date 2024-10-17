@@ -2,10 +2,19 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const FilesGrid = () => {
   const [files, setFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear any session or authentication-related data
+    localStorage.removeItem('authToken'); // Example: Remove auth token
+    navigate('/'); // Redirect to login page
+  };
 
   useEffect(() => {
     fetchFiles();
@@ -61,6 +70,12 @@ const FilesGrid = () => {
           className="ml-4 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
         >
           Cargar
+        </button>
+        <button
+          onClick={handleLogout}
+          className="bg-red-600 px-4 py-2 rounded-md hover:bg-red-700"
+        >
+          Logout
         </button>
       </div>
 

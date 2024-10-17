@@ -9,10 +9,10 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (username === 'admin' && password === 'password') {
+    if (username === 'admin' && password === 'hELITEB**2024') {
       navigate('/files');
     } else {
-      alert('Invalid username or password');
+      alert('Credenciales inválidas');
     }
   };
 
