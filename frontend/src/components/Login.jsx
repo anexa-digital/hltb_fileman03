@@ -1,5 +1,5 @@
 // src/components/Login.jsx
-
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -10,17 +10,28 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleLogin = () => {
-    if (username === 'admin' && password === 'password') {
-      // Mock authentication token
-      const authToken = 'someAuthToken';
-      login(authToken); // Update auth context
+  const handleLogin = async () => {
+    try {
+      // Make a request to the backend to get a token
+      const response = await axios.post('http://localhost:8000/api/token', {
+        username: username,
+        password: password,
+      }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+      });
+
+      const { access_token } = response.data;
+
+      // If successful, store the token and update the auth context
+      login(access_token);
       navigate('/files'); // Redirect to the protected page
-    } else {
-      alert('Invalid username or password');
+    } catch (error) {
+      alert('Credenciales inválidas');
     }
   };
-  
+
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="bg-gray-50 p-8 rounded-md shadow-md w-full max-w-sm">

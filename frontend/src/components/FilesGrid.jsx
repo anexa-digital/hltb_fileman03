@@ -1,8 +1,9 @@
 // src/components/FilesGrid.jsx
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 
 const FilesGrid = () => {
   const [files, setFiles] = useState([]);
@@ -20,18 +21,33 @@ const FilesGrid = () => {
     fetchFiles();
   }, []);
 
-  const fetchFiles = async () => {
-    try {
-      const response = await axios.get('http://localhost:8000/api/files');
-      setFiles(response.data.files || []);
-    } catch (error) {
-      console.error('Error leyendo archivos:', error);
-    }
-  };
-
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
   };
+
+  
+
+
+
+    const getAuthToken = () => {
+      return localStorage.getItem('authToken');
+    };
+
+    const fetchFiles = async () => {
+      try {
+        const token = getAuthToken();
+
+        const response = await axios.get('http://localhost:8000/api/files', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        setFiles(response.data.files || []);
+      } catch (error) {
+        console.error('Error leyendo archivos:', error);
+      }
+    };
 
   const uploadFile = async () => {
     if (!selectedFile) {
@@ -43,7 +59,14 @@ const FilesGrid = () => {
     formData.append('file', selectedFile);
 
     try {
-      await axios.post('http://localhost:8000/api/files', formData);
+      const token = getAuthToken();
+
+      await axios.post('http://localhost:8000/api/files', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
       fetchFiles(); // Refresh the list after upload
     } catch (error) {
       console.error('Error cargando archivo:', error);
@@ -52,12 +75,22 @@ const FilesGrid = () => {
 
   const removeFile = async (fileName) => {
     try {
-      await axios.delete(`http://localhost:8000/api/files/${fileName}`);
+      const token = getAuthToken();
+
+      await axios.delete(`http://localhost:8000/api/files/${fileName}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
       fetchFiles(); // Refresh the list after deletion
     } catch (error) {
       console.error('Error removiendo archivo:', error);
     }
   };
+
+
+
 
   return (
     <div className="p-8">
