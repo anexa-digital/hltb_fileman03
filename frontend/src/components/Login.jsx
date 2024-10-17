@@ -2,20 +2,25 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = () => {
-    if (username === 'admin' && password === 'hELITEB**2024') {
-      navigate('/files');
+    if (username === 'admin' && password === 'password') {
+      // Mock authentication token
+      const authToken = 'someAuthToken';
+      login(authToken); // Update auth context
+      navigate('/files'); // Redirect to the protected page
     } else {
-      alert('Credenciales inválidas');
+      alert('Invalid username or password');
     }
   };
-
+  
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="bg-gray-50 p-8 rounded-md shadow-md w-full max-w-sm">
