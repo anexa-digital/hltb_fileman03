@@ -4,6 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const BASE_URL = "http://localhost:8000";
+try {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+} catch (error) {
+    console.log('Development ENV')
+}
+console.log(BASE_URL);
 
 const FilesGrid = () => {
   const [files, setFiles] = useState([]);
@@ -37,7 +44,7 @@ const FilesGrid = () => {
       try {
         const token = getAuthToken();
 
-        const response = await axios.get('http://localhost:8000/api/files', {
+        const response = await axios.get(`${BASE_URL}/api/files`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -61,7 +68,7 @@ const FilesGrid = () => {
     try {
       const token = getAuthToken();
 
-      await axios.post('http://localhost:8000/api/files', formData, {
+      await axios.post(`${BASE_URL}/api/files`, formData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -77,7 +84,7 @@ const FilesGrid = () => {
     try {
       const token = getAuthToken();
 
-      await axios.delete(`http://localhost:8000/api/files/${fileName}`, {
+      await axios.delete(`${BASE_URL}/api/files/${fileName}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
