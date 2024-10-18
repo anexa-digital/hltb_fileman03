@@ -17,6 +17,8 @@ load_dotenv(dotenv_path=env_path)
 
 # Get variables from environment
 SECRET_KEY = os.getenv("SECRET_KEY")
+if SECRET_KEY is None:
+    raise ValueError("SECRET_KEY must be set in the .env file")
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
 USER_FILE = 'users.json'
@@ -54,8 +56,11 @@ def get_user(username: str):
     try:
         with open(USER_FILE, 'r') as file:
             users = json.load(file)
-            return users.get(username)
+            user = users.get(username)
+            print(user)
+            return user
     except FileNotFoundError:
+        print("ERROR: get_user")
         return None
     
 def create_access_token(data: dict, expires_delta: timedelta = None):

@@ -4,6 +4,16 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+let BASE_URL = "http://localhost:8000";
+try {
+  BASE_URL = process.env.REACT_APP_BASE_URL;
+  BASE_URL = "https://ws-ponal.heliteb.co";
+  console.log('Production ENV')
+} catch (error) {
+    console.log('Development ENV')
+}
+console.log(BASE_URL);
+
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -13,7 +23,7 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       // Make a request to the backend to get a token
-      const response = await axios.post('http://localhost:8000/api/token', {
+      const response = await axios.post(`${BASE_URL}/api/token`, {
         username: username,
         password: password,
       }, {

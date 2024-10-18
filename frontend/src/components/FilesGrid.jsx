@@ -4,9 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const BASE_URL = "http://localhost:8000";
+let BASE_URL = "http://localhost:8000";
 try {
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  BASE_URL = process.env.REACT_APP_BASE_URL;
+  BASE_URL = "https://ws-ponal.heliteb.co";
+  console.log('Production ENV')
 } catch (error) {
     console.log('Development ENV')
 }
