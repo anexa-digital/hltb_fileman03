@@ -3,3 +3,6 @@ uvicorn
 python-multipart
 starlette
 pyjwt
+bcrypt
+cryptography
+python-dotenv

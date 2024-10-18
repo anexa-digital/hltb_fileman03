@@ -1,0 +1,10 @@
+{
+    "admin": {
+        "username": "admin",
+        "hashed_password": "$2b$12$/3x5iNUWe9/Hl7VCKmblcuYaK/wiQ4QITBuCLKpL93NHo1Xj8d9le"
+    },
+    "admin2": {
+        "username": "admin2",
+        "hashed_password": "$2b$12$7HG6xwRFMWriIbkSF4koXuST.pph9VyL3iQxknZhVeCYYVH5I.VoO"
+    }
+}

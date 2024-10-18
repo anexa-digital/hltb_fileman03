@@ -6,25 +6,26 @@ import os
 from fastapi.security import OAuth2PasswordRequestForm
 from datetime import datetime, timedelta
 import jwt
+import bcrypt
+import json
 from starlette.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
 
-SECRET_KEY = "your_secret_key"  # Replace with a strong secret key
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+env_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env')
+load_dotenv(dotenv_path=env_path)
+
+# Get variables from environment
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
+USER_FILE = 'users.json'
 
 app = FastAPI(
     title="Gestor de Archivos",          # The name of your FastAPI app
     description="Gestor de Archivos",  # A short description of the app
     version="1.0.0"                  # The version of the app
 )
-
-
-users_db = {
-    "admin": {
-        "username": "admin",
-        "password": "password",  # In a real application, use hashed passwords
-    }
-}
 
 
 # Directory to store uploaded files
@@ -48,7 +49,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
+# Function to get user from the JSON file
+def get_user(username: str):
+    try:
+        with open(USER_FILE, 'r') as file:
+            users = json.load(file)
+            return users.get(username)
+    except FileNotFoundError:
+        return None
+    
 def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
     if expires_delta:
@@ -61,8 +70,11 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
 
 @app.post("/api/token")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = users_db.get(form_data.username)
-    if not user or user["password"] != form_data.password:
+    user = get_user(form_data.username)
+    if not user:
+        raise HTTPException(status_code=401, detail="Incorrect username or password")
+    
+    if not bcrypt.checkpw(form_data.password.encode('utf-8'), user["hashed_password"].encode('utf-8')):
         raise HTTPException(status_code=401, detail="Incorrect username or password")
     
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
