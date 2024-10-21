@@ -54,7 +54,9 @@ const FilesGrid = () => {
 
         setFiles(response.data.files || []);
       } catch (error) {
-        console.error('Error leyendo archivos:', error);
+        const _err = 'Error leyendo archivos';
+        console.error(_err, error);
+        alert(_err);
       }
     };
 
@@ -78,7 +80,9 @@ const FilesGrid = () => {
 
       fetchFiles(); // Refresh the list after upload
     } catch (error) {
-      console.error('Error cargando archivo:', error);
+      const _err = 'Error cargando archivos';
+      console.error(_err, error);
+      alert(_err);
     }
   };
 
@@ -94,7 +98,9 @@ const FilesGrid = () => {
 
       fetchFiles(); // Refresh the list after deletion
     } catch (error) {
-      console.error('Error removiendo archivo:', error);
+      const _err = 'Error removiendo archivos';
+      console.error(_err, error);
+      alert(_err);
     }
   };
 

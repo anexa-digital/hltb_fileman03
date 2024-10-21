@@ -42,6 +42,12 @@ const Login = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleLogin();
+    }
+  };
+
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="bg-gray-50 p-8 rounded-md shadow-md w-full max-w-sm">
@@ -55,6 +61,7 @@ const Login = () => {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            onKeyDown={handleKeyDown} 
             className="form-input w-full"
           />
         </div>
@@ -66,6 +73,7 @@ const Login = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown} 
             className="form-input w-full"
           />
         </div>
