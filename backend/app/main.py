@@ -1,14 +1,15 @@
 import uuid
 
-from fastapi import FastAPI, File, UploadFile, HTTPException, Depends
+from fastapi import FastAPI, File, UploadFile, HTTPException, Depends, status
 from fastapi.responses import JSONResponse
 import os
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import datetime, timedelta
 import jwt
 import bcrypt
 import json
 from starlette.middleware.cors import CORSMiddleware
+from jose import JWTError
 from dotenv import load_dotenv
 
 
@@ -29,6 +30,8 @@ app = FastAPI(
     version="1.0.0"                  # The version of the app
 )
 
+# OAuth2PasswordBearer scheme
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/token")
 
 # Directory to store uploaded files
 UPLOAD_FOLDER = './uploads'
@@ -73,6 +76,25 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+# Function to get the current user from the token
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+        user = get_user(username)
+        if user is None:
+            raise credentials_exception
+        return user
+    except JWTError:
+        raise credentials_exception
+    
 @app.post("/api/token")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = get_user(form_data.username)
@@ -91,7 +113,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 # Endpoint to get list of files with ID, name, and modified date
 @app.get("/api/files")
-async def get_files():
+async def get_files(current_user: dict = Depends(get_current_user)):
     try:
         files = []
         for file_name in os.listdir(UPLOAD_FOLDER):
@@ -110,7 +132,7 @@ async def get_files():
 
 # Endpoint to delete a file by name
 @app.delete("/api/files/{file_name}")
-async def delete_file(file_name: str):
+async def delete_file(file_name: str, current_user: dict = Depends(get_current_user)):
     file_path = os.path.join(UPLOAD_FOLDER, file_name)
     if os.path.exists(file_path):
         os.remove(file_path)
@@ -120,7 +142,7 @@ async def delete_file(file_name: str):
 
 # API Endpoint to handle file upload
 @app.post("/api/files")
-async def upload_file(file: UploadFile = File(...)):
+async def upload_file(file: UploadFile = File(...), current_user: dict = Depends(get_current_user)):
     try:
         # Save the uploaded file to the UPLOAD_FOLDER
         file_location = os.path.join(UPLOAD_FOLDER, file.filename)
